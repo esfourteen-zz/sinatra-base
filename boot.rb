@@ -7,15 +7,23 @@ require 'log'
 configure :development do |config|
   require 'sinatra/reloader'
   config.also_reload 'lib/**/*.rb'
+  
   $log = Log.new(STDOUT)
   $log.level = Log::DEBUG
+  
+  enable :logging, :dump_errors, :raise_errors
 end
 
 configure :production do
-  $log = Log.new(::File.join(::File.expand_path('../log',  __FILE__), 'application.log'))
+  
+  logfile = ::File.join(::File.expand_path('../log',  __FILE__), 'production.log')
+  $log = Log.new(logfile)
   $log.level = Log::ERROR
+  
+  enable :logging, :dump_errors
+  
+  STDOUT.reopen(logfile)
+  STDERR.reopen(logfile)
 end
-
-$log.info "TEST!"
 
 require ::File.expand_path('../application',  __FILE__)

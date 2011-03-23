@@ -1,0 +1,5 @@
+!.gitkeep
+Gemfile.lock
+.bundle
+log/
+tmp/
